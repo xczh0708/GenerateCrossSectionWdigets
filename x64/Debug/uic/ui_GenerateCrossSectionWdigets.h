@@ -15,6 +15,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
@@ -26,6 +27,7 @@ class Ui_GenerateCrossSectionWdigetsClass
 public:
     QAction *actionOpen;
     QWidget *centralWidget;
+    QPushButton *quitButton;
     QMenuBar *menuBar;
     QMenu *menu;
     QToolBar *mainToolBar;
@@ -40,6 +42,9 @@ public:
         actionOpen->setObjectName(QString::fromUtf8("actionOpen"));
         centralWidget = new QWidget(GenerateCrossSectionWdigetsClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        quitButton = new QPushButton(centralWidget);
+        quitButton->setObjectName(QString::fromUtf8("quitButton"));
+        quitButton->setGeometry(QRect(400, 320, 75, 23));
         GenerateCrossSectionWdigetsClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(GenerateCrossSectionWdigetsClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
@@ -66,6 +71,7 @@ public:
     {
         GenerateCrossSectionWdigetsClass->setWindowTitle(QApplication::translate("GenerateCrossSectionWdigetsClass", "GenerateCrossSectionWdigets", nullptr));
         actionOpen->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\211\223\345\274\200", nullptr));
+        quitButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\200\345\207\272", nullptr));
         menu->setTitle(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\226\207\344\273\266", nullptr));
     } // retranslateUi
 

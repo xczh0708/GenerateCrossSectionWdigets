@@ -3,6 +3,7 @@
 #include <QtWidgets/QMainWindow>
 #include "ui_GenerateCrossSectionWdigets.h"
 #include <QFileDialog>
+#include <QApplication>
 class GenerateCrossSectionWdigets : public QMainWindow
 {
     Q_OBJECT
@@ -13,6 +14,7 @@ public:
 	QString getOpenFileName();
 private slots:
 	void openFile();
+	void onQuitButtonClicked();
 private:
     Ui::GenerateCrossSectionWdigetsClass ui;
 	QString m_fileName;
