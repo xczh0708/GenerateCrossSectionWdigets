@@ -3,20 +3,25 @@
 #include <libdxfrw.h>
 #include <fstream>
 #include <iomanip>
+#include<drw_entities.h>
+#include<drw_header.h>
+#include <iostream>
+
 class CADRW : public DRW_Interface{
 private:
-	dxfRW &m_dxfW;
+	std::ofstream m_file;
 public:
-	CADRW(dxfRW &dxfw);
+	CADRW(const std::string &filename);
+	~CADRW();
+
 	void dxfWrite(dxfRW &dxfW);
-	virtual ~CADRW() override {
+	void writePoint(double x, double y, double z);
+	void writeLine(double x1, double y1, double z1, double x2, double y2, double z2);
+	void endSection();
+	void endFile();
 
-	}
 
-
-	virtual void addHeader(const DRW_Header *data) override {
-
-	}
+	void addHeader(const DRW_Header *data) override;
 
 	virtual void addLType(const DRW_LType &data) override {
 
