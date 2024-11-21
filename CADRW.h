@@ -15,9 +15,6 @@ public:
 	~CADRW();
 
 
-
-	void addHeader(const DRW_Header *data) override;
-
 	virtual void addLType(const DRW_LType &data) override {
 
 	}
