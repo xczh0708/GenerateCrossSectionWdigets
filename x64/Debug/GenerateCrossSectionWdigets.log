@@ -2,5 +2,4 @@
 d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;”
 d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;”
 d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;”
-LINK : warning LNK4098: 默认库“MSVCRT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
   GenerateCrossSectionWdigets.vcxproj -> D:\Users\xia\Desktop\workplace\横截面提取\GenerateCrossSectionWdigets\x64\Debug\GenerateCrossSectionWdigets.exe

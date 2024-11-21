@@ -10,10 +10,16 @@
 class CADRW : public DRW_Interface{
 private:
 	dxfRW &m_dxfW;
+	std::vector<std::pair<float, float>> m_results;
 public:
-	CADRW(dxfRW &dxfW);
-	~CADRW();
+	CADRW(dxfRW &dxfW, std::vector<std::pair<float, float>> results);
+	virtual ~CADRW() override {
 
+	}
+
+	virtual void addHeader(const DRW_Header *data) override {
+
+	}
 
 	virtual void addLType(const DRW_LType &data) override {
 
@@ -208,5 +214,6 @@ public:
 	}
 
 	virtual void writeEntities() override;
+
 	
 };
