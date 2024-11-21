@@ -9,16 +9,11 @@
 
 class CADRW : public DRW_Interface{
 private:
-	std::ofstream m_file;
+	dxfRW &m_dxfW;
 public:
-	CADRW(const std::string &filename);
+	CADRW(dxfRW &dxfW);
 	~CADRW();
 
-	void dxfWrite(dxfRW &dxfW);
-	void writePoint(double x, double y, double z);
-	void writeLine(double x1, double y1, double z1, double x2, double y2, double z2);
-	void endSection();
-	void endFile();
 
 
 	void addHeader(const DRW_Header *data) override;
@@ -215,8 +210,6 @@ public:
 
 	}
 
-	virtual void writeEntities() override {
-	
-	}
+	virtual void writeEntities() override;
 	
 };

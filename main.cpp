@@ -5,10 +5,14 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    /*QApplication a(argc, argv);
     GenerateCrossSectionWdigets w;
     w.show();
-    return a.exec();
+    return a.exec();*/
+	dxfRW dxf("file.dxf");
+	CADRW writer(dxf);
+	dxf.write(&writer, DRW::Version::AC1027, false);
+
 	//GCS test;
 	//pcl::PointCloud<pcl::PointXYZ>::Ptr  cloud(new pcl::PointCloud<pcl::PointXYZ>);
 	//pcl::PointCloud<pcl::PointXYZ>::Ptr  sampled_cloud(new pcl::PointCloud<pcl::PointXYZ>);

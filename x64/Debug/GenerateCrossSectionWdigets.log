@@ -1,20 +1,6 @@
-﻿  uic GenerateCrossSectionWdigets.ui
-  rcc GenerateCrossSectionWdigets.qrc
-  moc GenerateCrossSectionWdigets.h
-   RCC: Warning: No resources in 'D:\Users\xia\Desktop\workplace\妯埅闈㈡彁鍙朶GenerateCrossSectionWdigets\GenerateCrossSectionWdigets\GenerateCrossSectionWdigets.qrc'.
-  CADRW.cpp
-  GCS.cpp
-  GenerateCrossSectionWdigets.cpp
-  main.cpp
-d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;” (编译源文件 CADRW.cpp)
-d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;” (编译源文件 CADRW.cpp)
-d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;” (编译源文件 CADRW.cpp)
-d:\qt_pcl 1.9.1\include\pcl-1.9\pcl\point_traits.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 GCS.cpp)
-d:\qt_pcl 1.9.1\include\pcl-1.9\pcl\point_traits.h : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失 (编译源文件 main.cpp)
-d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;” (编译源文件 main.cpp)
-d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;” (编译源文件 main.cpp)
-d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;” (编译源文件 main.cpp)
-  qrc_GenerateCrossSectionWdigets.cpp
-  moc_GenerateCrossSectionWdigets.cpp
+﻿  CADRW.cpp
+d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;”
+d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;”
+d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;”
 LINK : warning LNK4098: 默认库“MSVCRT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
   GenerateCrossSectionWdigets.vcxproj -> D:\Users\xia\Desktop\workplace\横截面提取\GenerateCrossSectionWdigets\x64\Debug\GenerateCrossSectionWdigets.exe
