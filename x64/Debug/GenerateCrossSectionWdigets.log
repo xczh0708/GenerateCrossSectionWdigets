@@ -1,5 +1,1 @@
-﻿  CADRW.cpp
-d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;”
-d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;”
-d:\users\xia\desktop\workplace\c++\libdxfrw-master\src\drw_base.h(13): warning C4081: 应输入“newline”；找到“;”
-  GenerateCrossSectionWdigets.vcxproj -> D:\Users\xia\Desktop\workplace\横截面提取\GenerateCrossSectionWdigets\x64\Debug\GenerateCrossSectionWdigets.exe
+﻿  uic GenerateCrossSectionWdigets.ui

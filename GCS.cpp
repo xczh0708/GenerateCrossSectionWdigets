@@ -134,6 +134,7 @@ std::vector<std::pair<float, float>> GCS::getHeight(const pcl::PointCloud<pcl::P
 		for (int i = 0; i < num_closest; ++i) {
 			height += distances[i].point.z;
 		}
+		height = height / num_closest;
 		results.emplace_back(dis_to_begin, height);
 	}
 	return results;
