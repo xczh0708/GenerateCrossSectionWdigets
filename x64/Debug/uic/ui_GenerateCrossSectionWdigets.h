@@ -36,26 +36,26 @@ public:
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *label;
-    QLineEdit *lineEdit;
-    QPushButton *pushButton;
+    QLineEdit *lidarLE;
+    QPushButton *lidarOpenButton;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_2;
-    QLineEdit *lineEdit_2;
-    QPushButton *pushButton_2;
+    QLineEdit *sectionLE;
+    QPushButton *sectionOpenButton;
     QHBoxLayout *horizontalLayout_3;
     QLabel *label_3;
-    QLineEdit *lineEdit_3;
-    QPushButton *pushButton_3;
+    QLineEdit *dxfSaveLE;
+    QPushButton *dxfSaveButton;
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_4;
-    QLineEdit *lineEdit_4;
-    QPushButton *pushButton_4;
+    QLineEdit *dwgSaveLE;
+    QPushButton *dwgSaveButton;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_5;
-    QLineEdit *lineEdit_5;
-    QPushButton *pushButton_5;
+    QLineEdit *txtSaveLE;
+    QPushButton *txtSaveButton;
     QHBoxLayout *horizontalLayout_6;
-    QPushButton *pushButton_6;
+    QPushButton *startButton;
     QPushButton *quitButton;
     QMenuBar *menuBar;
     QMenu *menu;
@@ -90,15 +90,15 @@ public:
 
         horizontalLayout->addWidget(label);
 
-        lineEdit = new QLineEdit(layoutWidget);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        lidarLE = new QLineEdit(layoutWidget);
+        lidarLE->setObjectName(QString::fromUtf8("lidarLE"));
 
-        horizontalLayout->addWidget(lineEdit);
+        horizontalLayout->addWidget(lidarLE);
 
-        pushButton = new QPushButton(layoutWidget);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        lidarOpenButton = new QPushButton(layoutWidget);
+        lidarOpenButton->setObjectName(QString::fromUtf8("lidarOpenButton"));
 
-        horizontalLayout->addWidget(pushButton);
+        horizontalLayout->addWidget(lidarOpenButton);
 
 
         verticalLayout->addLayout(horizontalLayout);
@@ -111,15 +111,15 @@ public:
 
         horizontalLayout_2->addWidget(label_2);
 
-        lineEdit_2 = new QLineEdit(layoutWidget);
-        lineEdit_2->setObjectName(QString::fromUtf8("lineEdit_2"));
+        sectionLE = new QLineEdit(layoutWidget);
+        sectionLE->setObjectName(QString::fromUtf8("sectionLE"));
 
-        horizontalLayout_2->addWidget(lineEdit_2);
+        horizontalLayout_2->addWidget(sectionLE);
 
-        pushButton_2 = new QPushButton(layoutWidget);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
+        sectionOpenButton = new QPushButton(layoutWidget);
+        sectionOpenButton->setObjectName(QString::fromUtf8("sectionOpenButton"));
 
-        horizontalLayout_2->addWidget(pushButton_2);
+        horizontalLayout_2->addWidget(sectionOpenButton);
 
 
         verticalLayout->addLayout(horizontalLayout_2);
@@ -132,15 +132,15 @@ public:
 
         horizontalLayout_3->addWidget(label_3);
 
-        lineEdit_3 = new QLineEdit(layoutWidget);
-        lineEdit_3->setObjectName(QString::fromUtf8("lineEdit_3"));
+        dxfSaveLE = new QLineEdit(layoutWidget);
+        dxfSaveLE->setObjectName(QString::fromUtf8("dxfSaveLE"));
 
-        horizontalLayout_3->addWidget(lineEdit_3);
+        horizontalLayout_3->addWidget(dxfSaveLE);
 
-        pushButton_3 = new QPushButton(layoutWidget);
-        pushButton_3->setObjectName(QString::fromUtf8("pushButton_3"));
+        dxfSaveButton = new QPushButton(layoutWidget);
+        dxfSaveButton->setObjectName(QString::fromUtf8("dxfSaveButton"));
 
-        horizontalLayout_3->addWidget(pushButton_3);
+        horizontalLayout_3->addWidget(dxfSaveButton);
 
 
         verticalLayout->addLayout(horizontalLayout_3);
@@ -153,15 +153,15 @@ public:
 
         horizontalLayout_4->addWidget(label_4);
 
-        lineEdit_4 = new QLineEdit(layoutWidget);
-        lineEdit_4->setObjectName(QString::fromUtf8("lineEdit_4"));
+        dwgSaveLE = new QLineEdit(layoutWidget);
+        dwgSaveLE->setObjectName(QString::fromUtf8("dwgSaveLE"));
 
-        horizontalLayout_4->addWidget(lineEdit_4);
+        horizontalLayout_4->addWidget(dwgSaveLE);
 
-        pushButton_4 = new QPushButton(layoutWidget);
-        pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
+        dwgSaveButton = new QPushButton(layoutWidget);
+        dwgSaveButton->setObjectName(QString::fromUtf8("dwgSaveButton"));
 
-        horizontalLayout_4->addWidget(pushButton_4);
+        horizontalLayout_4->addWidget(dwgSaveButton);
 
 
         verticalLayout->addLayout(horizontalLayout_4);
@@ -174,15 +174,15 @@ public:
 
         horizontalLayout_5->addWidget(label_5);
 
-        lineEdit_5 = new QLineEdit(layoutWidget);
-        lineEdit_5->setObjectName(QString::fromUtf8("lineEdit_5"));
+        txtSaveLE = new QLineEdit(layoutWidget);
+        txtSaveLE->setObjectName(QString::fromUtf8("txtSaveLE"));
 
-        horizontalLayout_5->addWidget(lineEdit_5);
+        horizontalLayout_5->addWidget(txtSaveLE);
 
-        pushButton_5 = new QPushButton(layoutWidget);
-        pushButton_5->setObjectName(QString::fromUtf8("pushButton_5"));
+        txtSaveButton = new QPushButton(layoutWidget);
+        txtSaveButton->setObjectName(QString::fromUtf8("txtSaveButton"));
 
-        horizontalLayout_5->addWidget(pushButton_5);
+        horizontalLayout_5->addWidget(txtSaveButton);
 
 
         verticalLayout->addLayout(horizontalLayout_5);
@@ -193,10 +193,10 @@ public:
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setSpacing(6);
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
-        pushButton_6 = new QPushButton(layoutWidget);
-        pushButton_6->setObjectName(QString::fromUtf8("pushButton_6"));
+        startButton = new QPushButton(layoutWidget);
+        startButton->setObjectName(QString::fromUtf8("startButton"));
 
-        horizontalLayout_6->addWidget(pushButton_6);
+        horizontalLayout_6->addWidget(startButton);
 
         quitButton = new QPushButton(layoutWidget);
         quitButton->setObjectName(QString::fromUtf8("quitButton"));
@@ -233,16 +233,16 @@ public:
         GenerateCrossSectionWdigetsClass->setWindowTitle(QApplication::translate("GenerateCrossSectionWdigetsClass", "GenerateCrossSectionWdigets", nullptr));
         actionOpen->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\211\223\345\274\200", nullptr));
         label->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\277\200\345\205\211\351\233\267\350\276\276\346\225\260\346\215\256", nullptr));
-        pushButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
+        lidarOpenButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
         label_2->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226\347\272\277\346\226\207\344\273\266", nullptr));
-        pushButton_2->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
+        sectionOpenButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
         label_3->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "dxf\344\277\235\345\255\230\350\267\257\345\276\204", nullptr));
-        pushButton_3->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
+        dxfSaveButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
         label_4->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "dwg\344\277\235\345\255\230\350\267\257\345\276\204", nullptr));
-        pushButton_4->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
+        dwgSaveButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
         label_5->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\226\207\346\234\254\344\277\235\345\255\230\350\267\257\345\276\204", nullptr));
-        pushButton_5->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
-        pushButton_6->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226", nullptr));
+        txtSaveButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
+        startButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226", nullptr));
         quitButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\200\345\207\272", nullptr));
         menu->setTitle(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\226\207\344\273\266", nullptr));
     } // retranslateUi

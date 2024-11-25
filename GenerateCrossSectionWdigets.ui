@@ -36,10 +36,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit"/>
+          <widget class="QLineEdit" name="lidarLE"/>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton">
+          <widget class="QPushButton" name="lidarOpenButton">
            <property name="text">
             <string>选择</string>
            </property>
@@ -57,10 +57,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_2"/>
+          <widget class="QLineEdit" name="sectionLE"/>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_2">
+          <widget class="QPushButton" name="sectionOpenButton">
            <property name="text">
             <string>选择</string>
            </property>
@@ -78,10 +78,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_3"/>
+          <widget class="QLineEdit" name="dxfSaveLE"/>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_3">
+          <widget class="QPushButton" name="dxfSaveButton">
            <property name="text">
             <string>选择</string>
            </property>
@@ -99,10 +99,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_4"/>
+          <widget class="QLineEdit" name="dwgSaveLE"/>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_4">
+          <widget class="QPushButton" name="dwgSaveButton">
            <property name="text">
             <string>选择</string>
            </property>
@@ -120,10 +120,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_5"/>
+          <widget class="QLineEdit" name="txtSaveLE"/>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_5">
+          <widget class="QPushButton" name="txtSaveButton">
            <property name="text">
             <string>选择</string>
            </property>
@@ -136,7 +136,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QPushButton" name="pushButton_6">
+        <widget class="QPushButton" name="startButton">
          <property name="text">
           <string>提取</string>
          </property>
