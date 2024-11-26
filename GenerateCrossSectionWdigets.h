@@ -4,6 +4,8 @@
 #include "ui_GenerateCrossSectionWdigets.h"
 #include <QFileDialog>
 #include <QApplication>
+#include"GCS.h"
+#include"CADRW.h"
 class GenerateCrossSectionWdigets : public QMainWindow
 {
     Q_OBJECT
@@ -20,6 +22,7 @@ private slots:
 	void onSaveDXF();
 	void onSaveDWG();
 	void onSaveTXT();
+	void start();
 private:
     Ui::GenerateCrossSectionWdigetsClass ui;
 	QString m_fileName;
@@ -28,4 +31,6 @@ private:
 	QString m_dwgSaveFileName;
 	QString m_dxfSaveFileName;
 	QString m_txtSaveFileName;
+	GCS m_gcs;
+	CADRW m_dxfwrite;
 };

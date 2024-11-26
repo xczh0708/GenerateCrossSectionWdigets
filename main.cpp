@@ -1,7 +1,6 @@
 #include "GenerateCrossSectionWdigets.h"
 #include <QtWidgets/QApplication>
-#include"GCS.h"
-#include"CADRW.h"
+
 
 int main(int argc, char *argv[])
 {

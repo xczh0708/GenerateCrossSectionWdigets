@@ -8,7 +8,7 @@ bool compareDistance(const PointDistance& a, const PointDistance& b) {
 }//用于getHeight进行采点的比较方法和结构体
 
 //读取las数据
-pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::readLasData(const char* filename)
+void GCS::readLasData(const char* filename)
 {
 	//打开las文件
 	LASreadOpener lasrReadOpener;
@@ -16,11 +16,11 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::readLasData(const char* filename)
 	LASreader* lasReader = lasrReadOpener.open(false);
 	size_t count = lasReader->header.number_of_point_records;
 	//创建pcl格式
-	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);//注意自己的las文件格式。有颜色的使用PointXYZRGB
-	cloud->width = count;
-	cloud->height = 1;
-	cloud->resize(count);
-	cloud->is_dense = false;
+	//pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);//注意自己的las文件格式。有颜色的使用PointXYZRGB
+	m_pcdPointCloud->width = count;
+	m_pcdPointCloud->height = 1;
+	m_pcdPointCloud->resize(count);
+	m_pcdPointCloud->is_dense = false;
 
 	//读取las文件偏移值和缩放值
 	//double xOffset = lasReader->header.x_offset;// 偏移值
@@ -36,9 +36,9 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::readLasData(const char* filename)
 	while (lasReader->read_point() && j < count)
 	{
 		lasReader->compute_coordinates();
-		cloud->points[j].x = lasReader->get_x();
-		cloud->points[j].y = lasReader->get_y();
-		cloud->points[j].z = lasReader->get_z();
+		m_pcdPointCloud->points[j].x = lasReader->get_x();
+		m_pcdPointCloud->points[j].y = lasReader->get_y();
+		m_pcdPointCloud->points[j].z = lasReader->get_z();
 		/*cloud->points[j].x = (lasReader->point.get_x() * scaleX) + xOffset;
 		cloud->points[j].y = (lasReader->point.get_y() * scaleY) + yOffset;
 		cloud->points[j].z = (lasReader->point.get_z() * scaleZ) + zOffset;*/
@@ -47,7 +47,6 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::readLasData(const char* filename)
 		//cloud->points[j].b = lasReader->point.get_B();	
 		++j;
 	}
-	return cloud;
 }
 //计算两点之间距离
 double GCS::euclideanDistance(double x1, double y1, double x2, double y2)
@@ -55,9 +54,8 @@ double GCS::euclideanDistance(double x1, double y1, double x2, double y2)
 	return std::sqrt(std::pow(x1 - x2, 2) + std::pow( y1 - y2, 2));
 }
 //采样线段周围点云
-pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::samplePoint(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, const Eigen::Vector2f & begin_point, const Eigen::Vector2f & end_point, float distance)
+void GCS::samplePoint(const Eigen::Vector2f & begin_point, const Eigen::Vector2f & end_point, float distance)
 {
-	pcl::PointCloud<pcl::PointXYZ>::Ptr  cloud_sampled(new pcl::PointCloud<pcl::PointXYZ>);
 	Eigen::Vector2f delta = end_point - begin_point;//计算线段上的方向向量
 	Eigen::Vector2f perpendicular_direction(-delta[1], delta[0]);//垂直该线方向向量
 	float length = perpendicular_direction.norm();  // 向量的模
@@ -75,8 +73,8 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::samplePoint(const pcl::PointCloud<pcl::
 	pcl::CropBox<pcl::PointXYZ> crop_box;
 	crop_box.setMin(Eigen::Vector4f(min_x, min_y, -std::numeric_limits<float>::infinity(), 1.0f));  // 设置最小点
 	crop_box.setMax(Eigen::Vector4f(max_x, max_y, std::numeric_limits<float>::infinity(), 1.0f));     // 设置最大点
-	crop_box.setInputCloud(cloud);
-	crop_box.filter(*cloud_sampled);
+	crop_box.setInputCloud(m_pcdPointCloud);
+	crop_box.filter(*m_pcdSampledPointCloud);
 
 	//pcl::PointCloud<pcl::PointXYZ>::Ptr Pointcloud(new pcl::PointCloud<pcl::PointXYZ>);
 
@@ -105,14 +103,12 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::samplePoint(const pcl::PointCloud<pcl::
 	//else {
 	//	std::cerr << "Failed to save PCD file!" << std::endl;
 	//}
-	return cloud_sampled;
 }
 
-std::vector<std::pair<float, float>> GCS::getHeight(const pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_sampled, const Eigen::Vector2f & begin_point, const Eigen::Vector2f & end_point, int num_point)
+void GCS::getHeight( const Eigen::Vector2f & begin_point, const Eigen::Vector2f & end_point, int num_point)
 {
 	int num_closest = 3;//找寻最近点个数
 	std::vector<Eigen::Vector2f> key_points;
-	std::vector<std::pair<float, float>> results;
 	Eigen::Vector2f direction = end_point - begin_point;
 	//在线段上按照点的个数进行采集
 	for (int i = 0; i < num_point; ++i) {
@@ -126,7 +122,7 @@ std::vector<std::pair<float, float>> GCS::getHeight(const pcl::PointCloud<pcl::P
 		//获取到keypoint到起始点的距离
 		float dis_to_begin = euclideanDistance(key_points[i].x(), key_points[i].y(), begin_point.x(), begin_point.y());
 
-		for (const auto& point : cloud_sampled->points) {
+		for (const auto& point : m_pcdSampledPointCloud->points) {
 			float dist = euclideanDistance(key_points[i].x(), key_points[i].y(), point.x, point.y);
 			distances.push_back({ point, dist });
 		}
@@ -135,9 +131,8 @@ std::vector<std::pair<float, float>> GCS::getHeight(const pcl::PointCloud<pcl::P
 			height += distances[i].point.z;
 		}
 		height = height / num_closest;
-		results.emplace_back(dis_to_begin, height);
+		m_results.emplace_back(dis_to_begin, height);
 	}
-	return results;
 }
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::projrctPoint(pcl::PointCloud<pcl::PointXYZ>::Ptr samplecloud, const Eigen::Vector2f & begin_point, const Eigen::Vector2f & end_point)
@@ -249,6 +244,21 @@ void GCS::txtWrite(const char * filename, const std::string & survey_area, const
 			<< std::setw(10) << "备注" << std::endl;
 	}
 	file.close();
+}
+
+pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::getPcdPointCloud()
+{
+	return m_pcdPointCloud;
+}
+
+pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::getPcdSampledPointCloud()
+{
+	return m_pcdSampledPointCloud;
+}
+
+std::vector<std::pair<float, float>> GCS::getResults()
+{
+	return m_results;
 }
 
 

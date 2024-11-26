@@ -75,3 +75,10 @@ void GenerateCrossSectionWdigets::onSaveTXT()
 		ui.txtSaveLE->setText(m_lidarOpenFileName);
 	}
 }
+
+void GenerateCrossSectionWdigets::start()
+{
+	m_gcs.readLasData(m_lidarOpenFileName.toStdString().c_str());
+	m_gcs.samplePoint();//需要文件读取
+	m_gcs.getResults();
+}
