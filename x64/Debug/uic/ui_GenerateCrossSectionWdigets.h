@@ -32,7 +32,6 @@ public:
     QAction *actionOpen;
     QWidget *centralWidget;
     QWidget *layoutWidget;
-    QVBoxLayout *verticalLayout_2;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout;
     QLabel *label;
@@ -54,6 +53,9 @@ public:
     QLabel *label_5;
     QLineEdit *txtSaveLE;
     QPushButton *txtSaveButton;
+    QHBoxLayout *horizontalLayout_7;
+    QLabel *label_6;
+    QLineEdit *lineEdit;
     QHBoxLayout *horizontalLayout_6;
     QPushButton *startButton;
     QPushButton *quitButton;
@@ -73,15 +75,12 @@ public:
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         layoutWidget = new QWidget(centralWidget);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(100, 103, 298, 184));
-        verticalLayout_2 = new QVBoxLayout(layoutWidget);
-        verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
-        verticalLayout = new QVBoxLayout();
+        layoutWidget->setGeometry(QRect(100, 105, 296, 210));
+        verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setSpacing(6);
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
@@ -187,8 +186,21 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_5);
 
+        horizontalLayout_7 = new QHBoxLayout();
+        horizontalLayout_7->setSpacing(6);
+        horizontalLayout_7->setObjectName(QString::fromUtf8("horizontalLayout_7"));
+        label_6 = new QLabel(layoutWidget);
+        label_6->setObjectName(QString::fromUtf8("label_6"));
 
-        verticalLayout_2->addLayout(verticalLayout);
+        horizontalLayout_7->addWidget(label_6);
+
+        lineEdit = new QLineEdit(layoutWidget);
+        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+
+        horizontalLayout_7->addWidget(lineEdit);
+
+
+        verticalLayout->addLayout(horizontalLayout_7);
 
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setSpacing(6);
@@ -204,12 +216,12 @@ public:
         horizontalLayout_6->addWidget(quitButton);
 
 
-        verticalLayout_2->addLayout(horizontalLayout_6);
+        verticalLayout->addLayout(horizontalLayout_6);
 
         GenerateCrossSectionWdigetsClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(GenerateCrossSectionWdigetsClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 573, 23));
+        menuBar->setGeometry(QRect(0, 0, 573, 22));
         menu = new QMenu(menuBar);
         menu->setObjectName(QString::fromUtf8("menu"));
         GenerateCrossSectionWdigetsClass->setMenuBar(menuBar);
@@ -242,6 +254,7 @@ public:
         dwgSaveButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
         label_5->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\226\207\346\234\254\344\277\235\345\255\230\350\267\257\345\276\204", nullptr));
         txtSaveButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
+        label_6->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\207\207\346\240\267\347\202\271\346\225\260", nullptr));
         startButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226", nullptr));
         quitButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\200\345\207\272", nullptr));
         menu->setTitle(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\226\207\344\273\266", nullptr));

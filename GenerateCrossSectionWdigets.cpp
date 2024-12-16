@@ -12,6 +12,7 @@ GenerateCrossSectionWdigets::GenerateCrossSectionWdigets(QWidget *parent)
 	connect(ui.dxfSaveButton, &QPushButton::clicked, this, &GenerateCrossSectionWdigets::onSaveDXF);
 	connect(ui.dwgSaveButton, &QPushButton::clicked, this, &GenerateCrossSectionWdigets::onSaveDWG);
 	connect(ui.txtSaveButton, &QPushButton::clicked, this, &GenerateCrossSectionWdigets::onSaveTXT);
+	connect(ui.startButton, &QPushButton::clicked, this, &GenerateCrossSectionWdigets::start);
 }
 
 void GenerateCrossSectionWdigets::openFile() {
@@ -56,7 +57,7 @@ void GenerateCrossSectionWdigets::onSaveDXF()
 {
 	m_dxfSaveFileName = QFileDialog::getSaveFileName(this, QString::fromLocal8Bit("保存dxf文件"), "", QString::fromLocal8Bit("dxf文件 (*.dxf)"));
 	if (!m_dxfSaveFileName.isEmpty()) {
-		ui.dxfSaveLE->setText(m_lidarOpenFileName);
+		ui.dxfSaveLE->setText(m_dxfSaveFileName);
 	}
 }
 
@@ -64,7 +65,7 @@ void GenerateCrossSectionWdigets::onSaveDWG()
 {
 	m_dwgSaveFileName = QFileDialog::getSaveFileName(this, QString::fromLocal8Bit("保存dwg文件"), "", QString::fromLocal8Bit("dwg文件(*.dwg)"));
 	if (!m_dwgSaveFileName.isEmpty()) {
-		ui.dwgSaveLE->setText(m_lidarOpenFileName);
+		ui.dwgSaveLE->setText(m_dwgSaveFileName);
 	}
 }
 
@@ -72,13 +73,18 @@ void GenerateCrossSectionWdigets::onSaveTXT()
 {
 	m_txtSaveFileName = QFileDialog::getSaveFileName(this, QString::fromLocal8Bit("保存txt文件"), "", tr("文本文件 (*.txt)"));
 	if (!m_txtSaveFileName.isEmpty()) {
-		ui.txtSaveLE->setText(m_lidarOpenFileName);
+		ui.txtSaveLE->setText(m_txtSaveFileName);
 	}
 }
 
 void GenerateCrossSectionWdigets::start()
 {
 	m_gcs.readLasData(m_lidarOpenFileName.toStdString().c_str());
-	m_gcs.samplePoint();//需要文件读取
-	m_gcs.getResults();
+	m_gcs.samplePoint(0.5);//需要文件读取
+	m_gcs.getHeight(20);
+	m_gcs.txtWrite(m_txtSaveFileName.toStdString().c_str(), "测区名称", "坐标系名称", "度带数", "高程系统名称");
+	dxfRW dxf(m_dxfSaveFileName.toStdString().c_str());
+	CADRW writer(dxf, m_gcs.getResults());
+	dxf.write(&writer, DRW::Version::AC1027, false);
+	std::cout << "结束" << std::endl;
 }

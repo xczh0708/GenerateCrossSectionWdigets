@@ -8,8 +8,21 @@ CADRW::CADRW(dxfRW &dxfW, std::vector<std::pair<float, float>> results) : m_dxfW
 }
 
 
+
+
+
+
 void CADRW::writeEntities()
 {
+	float maxDis = std::numeric_limits<float>::lowest();
+	float maxHeight = std::numeric_limits<float>::lowest();
+	for (const auto& pair : m_results) {
+		if (pair.first > maxDis) maxDis = pair.first;
+		if (pair.second > maxHeight) maxHeight = pair.second;
+	}
+	maxDis = std::ceil(maxDis / 10.0f) * 10.0f;
+	maxHeight = std::ceil(maxHeight / 10.0f) * 10.0f;
+	double labeset = -2.5;
 	double basex = 10.0;
 	DRW_LWPolyline polyline;
 	polyline.flags = 0; // 0 表示不闭合
@@ -20,21 +33,21 @@ void CADRW::writeEntities()
 	axisLiney.basePoint.x = 0;    // 起点 X
 	axisLiney.basePoint.y = 0;   // 起点 Y
 	axisLiney.secPoint.x = 0;     // 终点 X
-	axisLiney.secPoint.y = 65;    // 终点 Y
+	axisLiney.secPoint.y = maxHeight;    // 终点 Y
 	m_dxfW.writeLine(&axisLiney);
 	axisLinex.basePoint.x = 0;    // 起点 X
 	axisLinex.basePoint.y = 0;   // 起点 Y
-	axisLinex.secPoint.x = 190+ basex;     // 终点 X
+	axisLinex.secPoint.x = maxDis + basex;     // 终点 X
 	axisLinex.secPoint.y = 0;    // 终点 Y
 	m_dxfW.writeLine(&axisLinex);
 	 // 2. 绘制刻度线并添加文字标注
 	double yMin = 0;  // 坐标轴起始 Y
-	double yMax = 65;  // 坐标轴结束 Y
+	double yMax = maxHeight;  // 坐标轴结束 Y
 	double ymajorStep = 5; // 主要刻度间隔
 	double yminorStep = 1; // 次要刻度间隔
 
 	double xMin = basex;  // 坐标轴起始 x
-	double xMax = 190 + basex;  // 坐标轴结束 x
+	double xMax = maxDis + basex;  // 坐标轴结束 x
 	double xmajorStep = 10; // 主要刻度间隔
 	double xminorStep = 1; // 次要刻度间隔
 	//y轴
@@ -57,7 +70,7 @@ void CADRW::writeEntities()
 		// 为主要刻度添加文字标注
 		if (static_cast<int>(y) % static_cast<int>(ymajorStep) == 0) {
 			DRW_Text label;
-			label.basePoint.x = -2.5;    // 文字偏移 X
+			label.basePoint.x = labeset;    // 文字偏移 X
 			label.basePoint.y = y;      // 文字 Y 坐标
 			label.basePoint.z = 0;      // 文字 Z 坐标
 			label.text = std::to_string(static_cast<int>(y)); // 标注内容
@@ -89,7 +102,7 @@ void CADRW::writeEntities()
 		if (static_cast<int>(x) % static_cast<int>(xmajorStep) == 0) {
 			DRW_Text label;
 			label.basePoint.x = x;    // 文字偏移 X
-			label.basePoint.y = -2.5;      // 文字 Y 坐标
+			label.basePoint.y = labeset;      // 文字 Y 坐标
 			label.basePoint.z = 0;      // 文字 Z 坐标
 			label.text = std::to_string(static_cast<int>(x)); // 标注内容
 			label.height = 1.0;         // 字体高度
@@ -132,4 +145,18 @@ void CADRW::writeEntities()
 
 }
 
-
+void DXFREAD::addLWPolyline(const DRW_LWPolyline & data)
+{
+	std::cout << "Found LWPolyline with " << data.vertlist.size() << " vertices." << std::endl;
+	std::vector<std::pair<float, float>> centerline;
+	// 读取并打印所有顶点信息
+	for (const auto& vertex : data.vertlist) {
+		std::pair<float, float> point(vertex->x, vertex->y);
+		centerline.push_back(point);
+		std::cout << "Vertex: x = " << vertex->x << ", y = " << vertex->y
+			<< ", Start Width = " << vertex->stawidth
+			<< ", End Width = " << vertex->endwidth
+			<< ", Bulge = " << vertex->bulge << std::endl;
+	}
+	m_centerlines.push_back(centerline);
+}

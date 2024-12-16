@@ -2,6 +2,7 @@
 #include <QtWidgets/QApplication>
 
 
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -9,7 +10,24 @@ int main(int argc, char *argv[])
     w.show();
     return a.exec();
 
+	//// 创建 MyDxfInterface 实例
+	//DXFREAD interface1;
 
+	//// 创建 dxfRW 实例，指定 DXF 文件路径
+	//dxfRW reader("D:/Users/xia/Desktop/yanqihu_file/水利工程断面/test.dxf");
+
+
+	//// 读取 DXF 文件并将数据传递给 MyDxfInterface
+	//bool ext = true;  // 如果需要在读取时应用挤出（转换为2D），设置为 true
+	//if (reader.read(&interface1, ext)) {
+
+	//	std::cout << "DXF file read successfully!" << std::endl;
+	//}
+	//else {
+	//	std::cerr << "Failed to read the DXF file." << std::endl;
+	//}
+
+	//return 0;
 	//liadr部分测试
 	//GCS test;
 	//pcl::PointCloud<pcl::PointXYZ>::Ptr  cloud(new pcl::PointCloud<pcl::PointXYZ>);

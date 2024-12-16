@@ -32,5 +32,4 @@ private:
 	QString m_dxfSaveFileName;
 	QString m_txtSaveFileName;
 	GCS m_gcs;
-	CADRW m_dxfwrite;
 };

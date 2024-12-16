@@ -1,4 +1,9 @@
-﻿  GCS.cpp
+﻿  moc GenerateCrossSectionWdigets.h
+  CADRW.cpp
+  GCS.cpp
   GenerateCrossSectionWdigets.cpp
   main.cpp
-d:\users\xia\desktop\workplace\横截面提取\generatecrosssectionwdigets\generatecrosssectionwdigets\main.cpp(3): fatal error C1083: 无法打开包括文件: “lasreader.hpp”: No such file or directory (编译源文件 main.cpp)
+d:\users\xia\desktop\workplace\横截面提取\generatecrosssectionwdigets\generatecrosssectionwdigets\cadrw.h(2): fatal error C1083: 无法打开包括文件: “drw_interface.h”: No such file or directory (编译源文件 CADRW.cpp)
+d:\users\xia\desktop\workplace\横截面提取\generatecrosssectionwdigets\generatecrosssectionwdigets\gcs.h(3): fatal error C1083: 无法打开包括文件: “pcl/io/pcd_io.h”: No such file or directory (编译源文件 GCS.cpp)
+d:\users\xia\desktop\workplace\横截面提取\generatecrosssectionwdigets\generatecrosssectionwdigets\gcs.h(3): fatal error C1083: 无法打开包括文件: “pcl/io/pcd_io.h”: No such file or directory (编译源文件 main.cpp)
+d:\users\xia\desktop\workplace\横截面提取\generatecrosssectionwdigets\generatecrosssectionwdigets\gcs.h(3): fatal error C1083: 无法打开包括文件: “pcl/io/pcd_io.h”: No such file or directory (编译源文件 GenerateCrossSectionWdigets.cpp)
