@@ -55,9 +55,9 @@ void GenerateCrossSectionWdigets::onOpenSection()
 
 void GenerateCrossSectionWdigets::onSaveDXF()
 {
-	m_dxfSaveFileName = QFileDialog::getSaveFileName(this, QString::fromLocal8Bit("保存dxf文件"), "", QString::fromLocal8Bit("dxf文件 (*.dxf)"));
-	if (!m_dxfSaveFileName.isEmpty()) {
-		ui.dxfSaveLE->setText(m_dxfSaveFileName);
+	m_dxfSaveFolderName = QFileDialog::getExistingDirectory(this, "选择文件夹");
+	if (!m_dxfSaveFolderName.isEmpty()) {
+		ui.dxfSaveLE->setText(m_dxfSaveFolderName);
 	}
 }
 
@@ -71,20 +71,42 @@ void GenerateCrossSectionWdigets::onSaveDWG()
 
 void GenerateCrossSectionWdigets::onSaveTXT()
 {
-	m_txtSaveFileName = QFileDialog::getSaveFileName(this, QString::fromLocal8Bit("保存txt文件"), "", tr("文本文件 (*.txt)"));
-	if (!m_txtSaveFileName.isEmpty()) {
-		ui.txtSaveLE->setText(m_txtSaveFileName);
+	m_txtSaveFolderName = QFileDialog::getExistingDirectory(this, "选择文件夹");
+	if (!m_txtSaveFolderName.isEmpty()) {
+		ui.txtSaveLE->setText(m_txtSaveFolderName);
 	}
 }
 
 void GenerateCrossSectionWdigets::start()
 {
+	m_extra_line_long = ui.extra_line_long->text().toFloat();
+	m_extra_line_point_num = ui.extra_line_point_num->text().toInt();
+	m_extra_line_num = ui.extra_line_num->text().toFloat();
+	// 创建 MyDxfInterface 实例
+	DXFREAD interface1;
+	// 创建 dxfRW 实例，指定 DXF 文件路径
+	dxfRW reader(m_sectionOpenFileName.toStdString().c_str());
+	// 读取 DXF 文件并将数据传递给 MyDxfInterface
+	bool ext = true;  // 如果需要在读取时应用挤出（转换为2D），设置为 true
+	if (reader.read(&interface1, ext)) {
+		std::cout << "DXF file read successfully!" << std::endl;
+	}
+	else {
+		std::cerr << "Failed to read the DXF file." << std::endl;
+	}
+	std::vector<std::vector<std::pair<float, float>>> centerlines = interface1.getCenterlines();
+	std::vector<std::pair<float, float>> centerline = centerlines[centerlines.size() - 1];
 	m_gcs.readLasData(m_lidarOpenFileName.toStdString().c_str());
-	m_gcs.samplePoint(0.5);//需要文件读取
-	m_gcs.getHeight(20);
-	m_gcs.txtWrite(m_txtSaveFileName.toStdString().c_str(), "测区名称", "坐标系名称", "度带数", "高程系统名称");
-	dxfRW dxf(m_dxfSaveFileName.toStdString().c_str());
-	CADRW writer(dxf, m_gcs.getResults());
-	dxf.write(&writer, DRW::Version::AC1027, false);
+	m_gcs.getCenterLines(centerline, m_extra_line_num, m_extra_line_long);
+	m_gcs.getHeight(0.5, m_extra_line_point_num);
+	m_gcs.txtWrite(m_txtSaveFolderName.toStdString().c_str(), "测区名称", "坐标系名称", "度带数", "高程系统名称");
+	int num_file = 0;
+	for (const auto& result : m_gcs.getResults()) {
+		std::string filename = std::string(m_dxfSaveFolderName.toStdString().c_str()) + "/dxf_res" + std::to_string(num_file) + ".dxf";
+		dxfRW dxf(filename.c_str());
+		CADRW writer(dxf, result);
+		dxf.write(&writer, DRW::Version::AC1027, false);
+		num_file++;
+	}
 	std::cout << "结束" << std::endl;
 }

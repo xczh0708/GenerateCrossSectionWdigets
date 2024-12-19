@@ -1,16 +1,17 @@
 #include "GCS.h"
-struct PointDistance {
-	pcl::PointXYZ point;
-	float distance;
-};
+
 bool compareDistance(const PointDistance& a, const PointDistance& b) {
 	return a.distance < b.distance;
 }//用于getHeight进行采点的比较方法和结构体
 
+Point interpolate(const Point& p1, const Point& p2, float t) {
+	return { p1.first + t * (p2.first - p1.first), p1.second + t * (p2.second - p1.second) };
+}//用于绘制提取线上的点
+
 GCS::GCS()
 {
 	m_pcdPointCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
-	m_pcdSampledPointCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
+	//m_pcdSampledPointCloud = pcl::PointCloud<pcl::PointXYZ>::Ptr(new pcl::PointCloud<pcl::PointXYZ>());
 }
 
 //读取las数据
@@ -62,92 +63,124 @@ double GCS::euclideanDistance(double x1, double y1, double x2, double y2)
 {
 	return std::sqrt(std::pow(x1 - x2, 2) + std::pow( y1 - y2, 2));
 }
-//采样线段周围点云
-void GCS::samplePoint(float distance)
-{
-	std::cout << "开始下采样" << std::endl;
-	Eigen::Vector2f begin_point(515474.687500f, 2846466.750000f);
-	Eigen::Vector2f end_point(515632.781250f, 2846559.250000f);
-	Eigen::Vector2f delta = end_point - begin_point;//计算线段上的方向向量
-	Eigen::Vector2f perpendicular_direction(-delta[1], delta[0]);//垂直该线方向向量
-	float length = perpendicular_direction.norm();  // 向量的模
-	Eigen::Vector2f unit_perpendicular_direction = perpendicular_direction / length; //计算垂直方向向量的单位化
-	//采样框范围获取
-	Eigen::Vector2f point1 = begin_point + distance * unit_perpendicular_direction;
-	Eigen::Vector2f point2 = begin_point - distance * unit_perpendicular_direction;
-	Eigen::Vector2f point3 = end_point + distance * unit_perpendicular_direction;
-	Eigen::Vector2f point4 = end_point - distance * unit_perpendicular_direction;
-	float min_x = std::min({ point1.x(), point2.x(), point3.x(), point4.x() });
-	float max_x = std::max({ point1.x(), point2.x(), point3.x(), point4.x() });
-	float min_y = std::min({ point1.y(), point2.y(), point3.y(), point4.y() });
-	float max_y = std::max({ point1.y(), point2.y(), point3.y(), point4.y() });
-	//通过边界框进行裁剪
-	pcl::CropBox<pcl::PointXYZ> crop_box;
-	crop_box.setMin(Eigen::Vector4f(min_x, min_y, -std::numeric_limits<float>::infinity(), 1.0f));  // 设置最小点
-	crop_box.setMax(Eigen::Vector4f(max_x, max_y, std::numeric_limits<float>::infinity(), 1.0f));     // 设置最大点
-	crop_box.setInputCloud(m_pcdPointCloud);
-	crop_box.filter(*m_pcdSampledPointCloud);
+////采样线段周围点云
+//void GCS::samplePoint(float distance,const Point& p1, const Point& p2)
+//{
+//	std::cout << "开始下采样" << std::endl;
+//	Eigen::Vector2f begin_point(p1.first, p1.second);
+//	Eigen::Vector2f end_point(p2.first, p2.second);
+//	Eigen::Vector2f delta = end_point - begin_point;//计算线段上的方向向量
+//	Eigen::Vector2f perpendicular_direction(-delta[1], delta[0]);//垂直该线方向向量
+//	float length = perpendicular_direction.norm();  // 向量的模
+//	Eigen::Vector2f unit_perpendicular_direction = perpendicular_direction / length; //计算垂直方向向量的单位化
+//	//采样框范围获取
+//	Eigen::Vector2f point1 = begin_point + distance * unit_perpendicular_direction;
+//	Eigen::Vector2f point2 = begin_point - distance * unit_perpendicular_direction;
+//	Eigen::Vector2f point3 = end_point + distance * unit_perpendicular_direction;
+//	Eigen::Vector2f point4 = end_point - distance * unit_perpendicular_direction;
+//	float min_x = std::min({ point1.x(), point2.x(), point3.x(), point4.x() });
+//	float max_x = std::max({ point1.x(), point2.x(), point3.x(), point4.x() });
+//	float min_y = std::min({ point1.y(), point2.y(), point3.y(), point4.y() });
+//	float max_y = std::max({ point1.y(), point2.y(), point3.y(), point4.y() });
+//	//通过边界框进行裁剪
+//	pcl::CropBox<pcl::PointXYZ> crop_box;
+//	crop_box.setMin(Eigen::Vector4f(min_x, min_y, -std::numeric_limits<float>::infinity(), 1.0f));  // 设置最小点
+//	crop_box.setMax(Eigen::Vector4f(max_x, max_y, std::numeric_limits<float>::infinity(), 1.0f));     // 设置最大点
+//	crop_box.setInputCloud(m_pcdPointCloud);
+//	crop_box.filter(*m_pcdSampledPointCloud);
+//	std::cout << "结束下采样" << std::endl;
+//	std::cout << "开始提取高度" << std::endl;
+//}
 
-	//pcl::PointCloud<pcl::PointXYZ>::Ptr Pointcloud(new pcl::PointCloud<pcl::PointXYZ>);
-
-	//// 将begin_point转换为pcl::PointXYZ并添加到点云
-	//pcl::PointXYZ pcl_begin_point;
-	//pcl_begin_point.x = begin_point.x();
-	//pcl_begin_point.y = begin_point.y();
-	//pcl_begin_point.z = 0.0f;  // 将z设置为0，表示二维点
-	//Pointcloud->points.push_back(pcl_begin_point);
-
-	//// 将end_point转换为pcl::PointXYZ并添加到点云
-	//pcl::PointXYZ pcl_end_point;
-	//pcl_end_point.x = end_point.x();
-	//pcl_end_point.y = end_point.y();
-	//pcl_end_point.z = 0.0f;  // 将z设置为0，表示二维点
-	//Pointcloud->points.push_back(pcl_end_point);
-
-	//// 设置点云大小
-	//Pointcloud->width = 2;  // 只有两个点
-	//Pointcloud->height = 1; // 单行点云
-
-	//// 保存点云为PCD文件
-	//if (pcl::io::savePCDFileASCII("D:/Users/xia/Desktop/outputPoint.pcd", *Pointcloud) == 0) {
-	//	std::cout << "PCD file saved to " << "D:/Users/xia/Desktop/output1.pcd" << std::endl;
-	//}
-	//else {
-	//	std::cerr << "Failed to save PCD file!" << std::endl;
-	//}
-	std::cout << "结束下采样" << std::endl;
-}
-
-void GCS::getHeight(int num_point)
+void GCS::getHeight(float distance,int num_point)
 {
 	std::cout << "开始提取高度" << std::endl;
-	Eigen::Vector2f begin_point(515474.687500f, 2846466.750000f);
-	Eigen::Vector2f end_point(515632.781250f, 2846559.250000f);
-	int num_closest = 3;//找寻最近点个数
-	std::vector<Eigen::Vector2f> key_points;
-	Eigen::Vector2f direction = end_point - begin_point;
-	//在线段上按照点的个数进行采集
-	for (int i = 0; i < num_point; ++i) {
-		float t = static_cast<float>(i) / (num_point - 1);  // t 是从 0 到 1 的比例
-		Eigen::Vector2f point = begin_point + t * direction;
-		key_points.push_back(point);//输出的结果包含起始点
-	}
-	for (int i = 0; i < key_points.size(); ++i) {
-		std::vector<PointDistance> distances;
-		float height = 0.0;
-		//获取到keypoint到起始点的距离
-		float dis_to_begin = euclideanDistance(key_points[i].x(), key_points[i].y(), begin_point.x(), begin_point.y());
+	int num_closest = 3;
+	//确定有效点，按高程排序
+	for (const auto& line : m_initial_extraction_line) {
+		std::vector<std::pair<float, float>> result;
+		pcl::PointCloud<pcl::PointXYZ>::Ptr pcdSampledPointCloud(new pcl::PointCloud<pcl::PointXYZ>());
+		Eigen::Vector2f begin_point(line.bengin_point.first, line.bengin_point.second);
+		Eigen::Vector2f end_point(line.end_point.first, line.end_point.second);
+		Eigen::Vector2f delta = end_point - begin_point;//计算线段上的方向向量
+		Eigen::Vector2f perpendicular_direction(-delta[1], delta[0]);//垂直该线方向向量
+		float length = perpendicular_direction.norm();  // 向量的模
+		Eigen::Vector2f unit_perpendicular_direction = perpendicular_direction / length; //计算垂直方向向量的单位化
+		//采样框范围获取
+		Eigen::Vector2f point1 = begin_point + distance * unit_perpendicular_direction;
+		Eigen::Vector2f point2 = begin_point - distance * unit_perpendicular_direction;
+		Eigen::Vector2f point3 = end_point + distance * unit_perpendicular_direction;
+		Eigen::Vector2f point4 = end_point - distance * unit_perpendicular_direction;
+		float min_x = std::min({ point1.x(), point2.x(), point3.x(), point4.x() });
+		float max_x = std::max({ point1.x(), point2.x(), point3.x(), point4.x() });
+		float min_y = std::min({ point1.y(), point2.y(), point3.y(), point4.y() });
+		float max_y = std::max({ point1.y(), point2.y(), point3.y(), point4.y() });
+		//通过边界框进行裁剪
+		pcl::CropBox<pcl::PointXYZ> crop_box;
+		crop_box.setMin(Eigen::Vector4f(min_x, min_y, -std::numeric_limits<float>::infinity(), 1.0f));  // 设置最小点
+		crop_box.setMax(Eigen::Vector4f(max_x, max_y, std::numeric_limits<float>::infinity(), 1.0f));     // 设置最大点
+		crop_box.setInputCloud(m_pcdPointCloud);
+		crop_box.filter(*pcdSampledPointCloud);
 
-		for (const auto& point : m_pcdSampledPointCloud->points) {
-			float dist = euclideanDistance(key_points[i].x(), key_points[i].y(), point.x, point.y);
-			distances.push_back({ point, dist });
+		if (pcdSampledPointCloud->size() > num_point) {		//判断该提取线是否在点云上
+			m_final_extraction_line.push_back(line);
 		}
-		std::sort(distances.begin(), distances.end(), compareDistance);//得到距离keypoint距离由近到远的排序点对
-		for (int i = 0; i < num_closest; ++i) {
-			height += distances[i].point.z;
+	}
+	std::sort(m_final_extraction_line.begin(), m_final_extraction_line.end(), [](const CenterLine& a, const CenterLine& b) -> bool {
+		return a.height > b.height;  // 按 height 降序排序
+		});
+
+	//提取高度
+	for (const auto& line : m_final_extraction_line) {
+		std::vector<std::pair<float, float>> result;
+		pcl::PointCloud<pcl::PointXYZ>::Ptr pcdSampledPointCloud(new pcl::PointCloud<pcl::PointXYZ>());
+		Eigen::Vector2f begin_point(line.bengin_point.first, line.bengin_point.second);
+		Eigen::Vector2f end_point(line.end_point.first, line.end_point.second);
+		Eigen::Vector2f delta = end_point - begin_point;//计算线段上的方向向量
+		Eigen::Vector2f perpendicular_direction(-delta[1], delta[0]);//垂直该线方向向量
+		float length = perpendicular_direction.norm();  // 向量的模
+		Eigen::Vector2f unit_perpendicular_direction = perpendicular_direction / length; //计算垂直方向向量的单位化
+		//采样框范围获取
+		Eigen::Vector2f point1 = begin_point + distance * unit_perpendicular_direction;
+		Eigen::Vector2f point2 = begin_point - distance * unit_perpendicular_direction;
+		Eigen::Vector2f point3 = end_point + distance * unit_perpendicular_direction;
+		Eigen::Vector2f point4 = end_point - distance * unit_perpendicular_direction;
+		float min_x = std::min({ point1.x(), point2.x(), point3.x(), point4.x() });
+		float max_x = std::max({ point1.x(), point2.x(), point3.x(), point4.x() });
+		float min_y = std::min({ point1.y(), point2.y(), point3.y(), point4.y() });
+		float max_y = std::max({ point1.y(), point2.y(), point3.y(), point4.y() });
+		//通过边界框进行裁剪
+		pcl::CropBox<pcl::PointXYZ> crop_box;
+		crop_box.setMin(Eigen::Vector4f(min_x, min_y, -std::numeric_limits<float>::infinity(), 1.0f));  // 设置最小点
+		crop_box.setMax(Eigen::Vector4f(max_x, max_y, std::numeric_limits<float>::infinity(), 1.0f));     // 设置最大点
+		crop_box.setInputCloud(m_pcdPointCloud);
+		crop_box.filter(*pcdSampledPointCloud);
+		//提取关键点
+		std::vector<Eigen::Vector2f> key_points;
+		Eigen::Vector2f direction = end_point - begin_point;
+		for (int i = 0; i < num_point; ++i) {
+			float t = static_cast<float>(i) / (num_point);  // t 是从 0 到 1 的比例
+			Eigen::Vector2f point = begin_point + t * direction;
+			key_points.push_back(point);//输出的结果包含起始点
 		}
-		height = (height / num_closest)/10;
-		m_results.emplace_back(dis_to_begin, height);
+		//提高度
+		for (int i = 0; i < key_points.size(); i++) {
+			float height = 0.0;
+			std::vector<PointDistance> distances;
+			//获取到keypoint到起始点的距离
+			float dis_to_begin = euclideanDistance(key_points[i].x(), key_points[i].y(), begin_point.x(), begin_point.y());
+			for (const auto& point : pcdSampledPointCloud->points) {
+				float dist = euclideanDistance(key_points[i].x(), key_points[i].y(), point.x, point.y);
+				distances.push_back({ point, dist });
+			}
+			std::sort(distances.begin(), distances.end(), compareDistance);//得到距离keypoint距离由近到远的排序点对
+			for (int i = 0; i < num_closest; ++i) {
+				height += distances[i].point.z;
+			}
+			height = (height / num_closest);
+			result.emplace_back(dis_to_begin, height);
+		}
+			m_results.push_back(result);
 	}
 	std::cout << "结束提取高度" << std::endl;
 }
@@ -238,30 +271,63 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::projrctPoint(pcl::PointCloud<pcl::Point
 	return samplecloud;
 }
 
-void GCS::txtWrite(const char * filename, const std::string & survey_area, const std::string & coordinate_system, const std::string & zone_band, const std::string & elevation_system)
+void GCS::txtWrite(const char * foldersname, const std::string & survey_area, const std::string & coordinate_system, const std::string & zone_band, const std::string & elevation_system)
 {
+	int num_file = 0;
 	std::cout << "开始写入txt" << std::endl;
-	std::ofstream file(filename);
-	// 表格标题和说明
-	file << "横断面成果表\n";
-	file << "测区：" << survey_area << "\n";
-	file << "坐标系统：" << coordinate_system << "\n";
-	file << "度带：" << zone_band << "\n";
-	file << "高程系统：" << elevation_system << "\n\n";
-	// 表头
-	file << std::left << std::setw(8) << "点名"
-		<< std::setw(15) << "起点距(m)"
-		<< std::setw(10) << "高程(m)"
-		<< std::setw(10) << "备注"
-		<< std::endl;
-	file << std::string(43, '-') << std::endl;
 	for (int i = 0; i < m_results.size(); i++) {
-		file <<std::left<< std::setw(8) << (i + 1) 
-			<< std::setw(15) << std::fixed << std::setprecision(6) << m_results[i].first
-			<< std::setw(10) << std::fixed << std::setprecision(4)<< m_results[i].second
-			<< std::setw(10) << "备注" << std::endl;
+		std::vector < std::pair<float, float>> result = m_results[i];
+		std::string filename = std::string(foldersname) + "/txt_res" + std::to_string(num_file) + ".txt";
+		std::ofstream file(filename);
+		// 表格标题和说明
+		file << "横断面成果表\n";
+		file << "测区：" << survey_area << "\n";
+		file << "坐标系统：" << coordinate_system << "\n";
+		file << "度带：" << zone_band << "\n";
+		file << "高程系统：" << elevation_system << "\n";
+		file<<"提取线起点坐标:("<<m_final_extraction_line[i].bengin_point.first<<","<< m_final_extraction_line[i].bengin_point.second<<")"
+			<<"提取线终点坐标:(" << m_final_extraction_line[i].end_point.first << "," << m_final_extraction_line[i].end_point.second << ")" << "\n\n";
+		// 表头
+		file << std::left << std::setw(8) << "点名"
+			<< std::setw(15) << "起点距(m)"
+			<< std::setw(10) << "高程(m)"
+			<< std::setw(10) << "备注"
+			<< std::endl;
+		file << std::string(43, '-') << std::endl;
+		for (int i = 0; i < result.size(); i++) {
+			file << std::left << std::setw(8) << (i + 1)
+				<< std::setw(15) << std::fixed << std::setprecision(6) << result[i].first
+				<< std::setw(10) << std::fixed << std::setprecision(4) << result[i].second
+				<< std::setw(10) << "备注" << std::endl;
+		}
+		file.close();
+		num_file++;
 	}
-	file.close();
+	//for (const auto& result : m_results) {
+	//	std::string filename = std::string(foldersname) + "/txt_res" + std::to_string(num_file) + ".txt";
+	//	std::ofstream file(filename);
+	//	// 表格标题和说明
+	//	file << "横断面成果表\n";
+	//	file << "测区：" << survey_area << "\n";
+	//	file << "坐标系统：" << coordinate_system << "\n";
+	//	file << "度带：" << zone_band << "\n";
+	//	file << "高程系统：" << elevation_system << "\n\n";
+	//	// 表头
+	//	file << std::left << std::setw(8) << "点名"
+	//		<< std::setw(15) << "起点距(m)"
+	//		<< std::setw(10) << "高程(m)"
+	//		<< std::setw(10) << "备注"
+	//		<< std::endl;
+	//	file << std::string(43, '-') << std::endl;
+	//	for (int i = 0; i < result.size(); i++) {
+	//		file << std::left << std::setw(8) << (i + 1)
+	//			<< std::setw(15) << std::fixed << std::setprecision(6) << result[i].first
+	//			<< std::setw(10) << std::fixed << std::setprecision(4) << result[i].second
+	//			<< std::setw(10) << "备注" << std::endl;
+	//	}
+	//	file.close();
+	//	num_file++;
+	//}
 	std::cout << "结束写入txt" << std::endl;
 }
 
@@ -270,15 +336,83 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::getPcdPointCloud()
 	return m_pcdPointCloud;
 }
 
-pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::getPcdSampledPointCloud()
-{
-	return m_pcdSampledPointCloud;
-}
+//pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::getPcdSampledPointCloud()
+//{
+//	return m_pcdSampledPointCloud;
+//}
 
-std::vector<std::pair<float, float>> GCS::getResults()
+std::vector<std::vector<std::pair<float, float>>> GCS::getResults()
 {
 	return m_results;
 }
+
+void GCS::getCenterLines(const std::vector<Point>& centerline, float targetDistance,float reslong)
+{
+	float accumulatedDistance = 0.0f;  // 累计距离
+	pcl::KdTreeFLANN<pcl::PointXYZ> kd_tree;
+	kd_tree.setInputCloud(m_pcdPointCloud);
+	float distance_xy = 0.0f;
+	CenterLine line;
+	// 遍历所有点
+	for (size_t i = 1; i < centerline.size(); ++i) {
+		// 计算当前点与前一个点之间的距离
+		float segmentDistance = euclideanDistance(centerline[i - 1].first,centerline[i - 1].second, centerline[i].first, centerline[i].second);
+		accumulatedDistance += segmentDistance;  // 累加距离
+
+		// 如果累计距离大于等于目标距离
+		while (accumulatedDistance >= targetDistance) {
+			// 计算该线段上目标距离的插值点
+			float t = (accumulatedDistance - targetDistance) / segmentDistance;
+			Point interpolatedPoint = interpolate(centerline[i - 1], centerline[i], t);
+			pcl::PointXYZ query_point(interpolatedPoint.first, interpolatedPoint.second, 0.0f);
+			std::vector<int> nearest_indices(1);  // 最近邻的点索引
+			std::vector<float> nearest_distances(1);  // 最近邻的距离
+
+			if (kd_tree.nearestKSearch(query_point, 1, nearest_indices, nearest_distances) > 0)
+			{
+				const pcl::PointXYZ& nearest_point = m_pcdPointCloud->points[nearest_indices[0]];
+				// 计算查询点和最近邻点的 xy 平面距离
+				float dx = query_point.x - nearest_point.x;
+				float dy = query_point.y - nearest_point.y;
+				float distance_xy = std::sqrt(dx * dx + dy * dy);  // 忽略 z 坐标
+
+				std::cout << "Point (" << interpolatedPoint.first << ", " << interpolatedPoint.second << ") "
+					<< "has nearest point (" << nearest_point.x << ", " << nearest_point.y << ", " << nearest_point.z << ") "
+					<< "with distance: " << distance_xy << std::endl;
+				line.height = nearest_point.z;
+			}
+			auto perpendicularLine = calculatePerpendicularLine(centerline[i - 1], centerline[i], interpolatedPoint, reslong / 2.0);
+			line.bengin_point = perpendicularLine.first;
+			line.end_point = perpendicularLine.second;
+			m_initial_extraction_line.push_back(line);
+			// 更新累计距离，减去目标距离
+			accumulatedDistance -= targetDistance;
+		}
+	}
+}
+
+
+std::pair<Point, Point> GCS::calculatePerpendicularLine(const Point & p1, const Point & p2, const Point & interpolatedPoint, float distance)
+{
+	// 计算线段的方向向量
+	float dx = p2.first - p1.first;
+	float dy = p2.second - p1.second;
+
+	// 计算单位方向向量
+	float length = euclideanDistance(p1.first, p1.second, p2.first, p2.second);
+	float unit_dx = dx / length;
+	float unit_dy = dy / length;
+
+	// 计算垂直方向向量
+	float perpendicular_dx = -unit_dy;
+	float perpendicular_dy = unit_dx;
+
+	// 根据插值点和垂直方向计算上下移动后的点
+	Point startPoint = { interpolatedPoint.first - perpendicular_dx * distance, interpolatedPoint.second - perpendicular_dy * distance };
+	Point endPoint = { interpolatedPoint.first + perpendicular_dx * distance, interpolatedPoint.second + perpendicular_dy * distance };
+	return { startPoint, endPoint };
+}
+
 
 
              

@@ -33,7 +33,7 @@ void CADRW::writeEntities()
 	axisLiney.basePoint.x = 0;    // 起点 X
 	axisLiney.basePoint.y = 0;   // 起点 Y
 	axisLiney.secPoint.x = 0;     // 终点 X
-	axisLiney.secPoint.y = maxHeight;    // 终点 Y
+	axisLiney.secPoint.y = maxHeight - 1500;    // 终点 Y
 	m_dxfW.writeLine(&axisLiney);
 	axisLinex.basePoint.x = 0;    // 起点 X
 	axisLinex.basePoint.y = 0;   // 起点 Y
@@ -41,7 +41,7 @@ void CADRW::writeEntities()
 	axisLinex.secPoint.y = 0;    // 终点 Y
 	m_dxfW.writeLine(&axisLinex);
 	 // 2. 绘制刻度线并添加文字标注
-	double yMin = 0;  // 坐标轴起始 Y
+	double yMin = 1500;  // 坐标轴起始 Y
 	double yMax = maxHeight;  // 坐标轴结束 Y
 	double ymajorStep = 5; // 主要刻度间隔
 	double yminorStep = 1; // 次要刻度间隔
@@ -54,8 +54,8 @@ void CADRW::writeEntities()
 	for (double y = yMin; y <= yMax; y += yminorStep) {
 		DRW_Line tickLine;
 		tickLine.basePoint.x = 0;       // 起点 X
-		tickLine.basePoint.y = y;       // 起点 Y
-		tickLine.secPoint.y = y;        // 终点 Y
+		tickLine.basePoint.y = y - 1500;       // 起点 Y
+		tickLine.secPoint.y = y - 1500;        // 终点 Y
 
 		if (static_cast<int>(y) % static_cast<int>(ymajorStep) == 0) {
 			// 主要刻度（长刻度线）
@@ -71,7 +71,7 @@ void CADRW::writeEntities()
 		if (static_cast<int>(y) % static_cast<int>(ymajorStep) == 0) {
 			DRW_Text label;
 			label.basePoint.x = labeset;    // 文字偏移 X
-			label.basePoint.y = y;      // 文字 Y 坐标
+			label.basePoint.y = y - 1500;      // 文字 Y 坐标
 			label.basePoint.z = 0;      // 文字 Z 坐标
 			label.text = std::to_string(static_cast<int>(y)); // 标注内容
 			label.height = 1.0;         // 字体高度
@@ -116,21 +116,22 @@ void CADRW::writeEntities()
 		DRW_Text textnum;
 		DRW_Text textheight;
 		textnum.basePoint.x = m_results[i].first + basex;              // 插入点 X 坐标
-		textnum.basePoint.y = m_results[i].second + 1;             // 插入点 Y 坐标
+		textnum.basePoint.y = m_results[i].second-1499;             // 插入点 Y 坐标
 		textnum.height = 0.5;                   // 文本大小 可以调整
 		textnum.text = std::to_string(static_cast<int>(i+1));         // 文本内容
 		textnum.angle = 0;                     // 旋转角度（水平）
 
 		textheight.basePoint.x = m_results[i].first + basex - 1;
-		textheight.basePoint.y = (m_results[i].second / 2);
+		textheight.basePoint.y = ((m_results[i].second -1500) / 2);
 		textheight.height = 0.5;
 		textheight.text = std::to_string(static_cast<float>(m_results[i].second));
 		textheight.angle = 90;
 		textheight.color = 1;
+		//绘制高度竖线
 		line.basePoint.x = m_results[i].first + basex;//设置起始点坐标
 		line.basePoint.y = 0;
 		line.secPoint.x = m_results[i].first + basex;//设置终点坐标
-		line.secPoint.y = m_results[i].second;
+		line.secPoint.y = m_results[i].second - 1500;
 		m_dxfW.writeLine(&line);
 		m_dxfW.writeText(&textnum);
 		m_dxfW.writeText(&textheight);
@@ -139,10 +140,15 @@ void CADRW::writeEntities()
 		// 添加顶点
 		DRW_Vertex2D* v1 = polyline.addVertex();
 		v1->x = m_results[i].first + basex;
-		v1->y = m_results[i].second;
+		v1->y = m_results[i].second - 1500;
 		m_dxfW.writeLWPolyline(&polyline);
 	}
 
+}
+
+std::vector<std::vector<std::pair<float, float>>> DXFREAD::getCenterlines()
+{
+	return m_centerlines;
 }
 
 void DXFREAD::addLWPolyline(const DRW_LWPolyline & data)

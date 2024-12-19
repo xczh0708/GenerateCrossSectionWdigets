@@ -55,10 +55,16 @@ public:
     QPushButton *txtSaveButton;
     QHBoxLayout *horizontalLayout_7;
     QLabel *label_6;
-    QLineEdit *lineEdit;
+    QLineEdit *extra_line_point_num;
+    QHBoxLayout *horizontalLayout_8;
+    QLabel *label_7;
+    QLineEdit *extra_line_long;
+    QHBoxLayout *horizontalLayout_10;
+    QLabel *label_9;
+    QLineEdit *extra_line_num;
     QHBoxLayout *horizontalLayout_6;
-    QPushButton *startButton;
     QPushButton *quitButton;
+    QPushButton *startButton;
     QMenuBar *menuBar;
     QMenu *menu;
     QToolBar *mainToolBar;
@@ -68,14 +74,14 @@ public:
     {
         if (GenerateCrossSectionWdigetsClass->objectName().isEmpty())
             GenerateCrossSectionWdigetsClass->setObjectName(QString::fromUtf8("GenerateCrossSectionWdigetsClass"));
-        GenerateCrossSectionWdigetsClass->resize(573, 451);
+        GenerateCrossSectionWdigetsClass->resize(480, 399);
         actionOpen = new QAction(GenerateCrossSectionWdigetsClass);
         actionOpen->setObjectName(QString::fromUtf8("actionOpen"));
         centralWidget = new QWidget(GenerateCrossSectionWdigetsClass);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         layoutWidget = new QWidget(centralWidget);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        layoutWidget->setGeometry(QRect(100, 105, 296, 210));
+        layoutWidget->setGeometry(QRect(40, 33, 401, 311));
         verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
@@ -194,26 +200,58 @@ public:
 
         horizontalLayout_7->addWidget(label_6);
 
-        lineEdit = new QLineEdit(layoutWidget);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
+        extra_line_point_num = new QLineEdit(layoutWidget);
+        extra_line_point_num->setObjectName(QString::fromUtf8("extra_line_point_num"));
 
-        horizontalLayout_7->addWidget(lineEdit);
+        horizontalLayout_7->addWidget(extra_line_point_num);
 
 
         verticalLayout->addLayout(horizontalLayout_7);
 
+        horizontalLayout_8 = new QHBoxLayout();
+        horizontalLayout_8->setSpacing(6);
+        horizontalLayout_8->setObjectName(QString::fromUtf8("horizontalLayout_8"));
+        label_7 = new QLabel(layoutWidget);
+        label_7->setObjectName(QString::fromUtf8("label_7"));
+
+        horizontalLayout_8->addWidget(label_7);
+
+        extra_line_long = new QLineEdit(layoutWidget);
+        extra_line_long->setObjectName(QString::fromUtf8("extra_line_long"));
+
+        horizontalLayout_8->addWidget(extra_line_long);
+
+
+        verticalLayout->addLayout(horizontalLayout_8);
+
+        horizontalLayout_10 = new QHBoxLayout();
+        horizontalLayout_10->setSpacing(6);
+        horizontalLayout_10->setObjectName(QString::fromUtf8("horizontalLayout_10"));
+        label_9 = new QLabel(layoutWidget);
+        label_9->setObjectName(QString::fromUtf8("label_9"));
+
+        horizontalLayout_10->addWidget(label_9);
+
+        extra_line_num = new QLineEdit(layoutWidget);
+        extra_line_num->setObjectName(QString::fromUtf8("extra_line_num"));
+
+        horizontalLayout_10->addWidget(extra_line_num);
+
+
+        verticalLayout->addLayout(horizontalLayout_10);
+
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setSpacing(6);
         horizontalLayout_6->setObjectName(QString::fromUtf8("horizontalLayout_6"));
-        startButton = new QPushButton(layoutWidget);
-        startButton->setObjectName(QString::fromUtf8("startButton"));
-
-        horizontalLayout_6->addWidget(startButton);
-
         quitButton = new QPushButton(layoutWidget);
         quitButton->setObjectName(QString::fromUtf8("quitButton"));
 
         horizontalLayout_6->addWidget(quitButton);
+
+        startButton = new QPushButton(layoutWidget);
+        startButton->setObjectName(QString::fromUtf8("startButton"));
+
+        horizontalLayout_6->addWidget(startButton);
 
 
         verticalLayout->addLayout(horizontalLayout_6);
@@ -221,7 +259,7 @@ public:
         GenerateCrossSectionWdigetsClass->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(GenerateCrossSectionWdigetsClass);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 573, 22));
+        menuBar->setGeometry(QRect(0, 0, 480, 18));
         menu = new QMenu(menuBar);
         menu->setObjectName(QString::fromUtf8("menu"));
         GenerateCrossSectionWdigetsClass->setMenuBar(menuBar);
@@ -244,19 +282,21 @@ public:
     {
         GenerateCrossSectionWdigetsClass->setWindowTitle(QApplication::translate("GenerateCrossSectionWdigetsClass", "GenerateCrossSectionWdigets", nullptr));
         actionOpen->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\211\223\345\274\200", nullptr));
-        label->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\277\200\345\205\211\351\233\267\350\276\276\346\225\260\346\215\256", nullptr));
+        label->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\277\200\345\205\211\351\233\267\350\276\276\346\225\260\346\215\256  ", nullptr));
         lidarOpenButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
-        label_2->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226\347\272\277\346\226\207\344\273\266", nullptr));
+        label_2->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226\347\272\277\346\226\207\344\273\266    ", nullptr));
         sectionOpenButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
-        label_3->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "dxf\344\277\235\345\255\230\350\267\257\345\276\204", nullptr));
+        label_3->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "dxf\344\277\235\345\255\230\346\226\207\344\273\266\345\244\271 ", nullptr));
         dxfSaveButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
-        label_4->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "dwg\344\277\235\345\255\230\350\267\257\345\276\204", nullptr));
+        label_4->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "dwg\344\277\235\345\255\230\350\267\257\345\276\204   ", nullptr));
         dwgSaveButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
-        label_5->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\226\207\346\234\254\344\277\235\345\255\230\350\267\257\345\276\204", nullptr));
+        label_5->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\226\207\346\234\254\344\277\235\345\255\230\346\226\207\344\273\266\345\244\271", nullptr));
         txtSaveButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\211\346\213\251", nullptr));
-        label_6->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\207\207\346\240\267\347\202\271\346\225\260", nullptr));
-        startButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226", nullptr));
+        label_6->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226\347\272\277\347\202\271\346\225\260    ", nullptr));
+        label_7->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226\347\272\277\351\225\277\345\272\246    ", nullptr));
+        label_9->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226\347\272\277\351\227\264\351\232\224   ", nullptr));
         quitButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\351\200\200\345\207\272", nullptr));
+        startButton->setText(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\217\220\345\217\226", nullptr));
         menu->setTitle(QApplication::translate("GenerateCrossSectionWdigetsClass", "\346\226\207\344\273\266", nullptr));
     } // retranslateUi
 

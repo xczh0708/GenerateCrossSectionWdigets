@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>573</width>
-    <height>451</height>
+    <width>480</width>
+    <height>399</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>105</y>
-      <width>296</width>
-      <height>210</height>
+      <x>40</x>
+      <y>33</y>
+      <width>401</width>
+      <height>311</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -29,7 +29,7 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>激光雷达数据</string>
+          <string>激光雷达数据  </string>
          </property>
         </widget>
        </item>
@@ -50,7 +50,7 @@
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>提取线文件</string>
+          <string>提取线文件    </string>
          </property>
         </widget>
        </item>
@@ -71,7 +71,7 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>dxf保存路径</string>
+          <string>dxf保存文件夹 </string>
          </property>
         </widget>
        </item>
@@ -92,7 +92,7 @@
        <item>
         <widget class="QLabel" name="label_4">
          <property name="text">
-          <string>dwg保存路径</string>
+          <string>dwg保存路径   </string>
          </property>
         </widget>
        </item>
@@ -113,7 +113,7 @@
        <item>
         <widget class="QLabel" name="label_5">
          <property name="text">
-          <string>文本保存路径</string>
+          <string>文本保存文件夹</string>
          </property>
         </widget>
        </item>
@@ -134,28 +134,56 @@
        <item>
         <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>采样点数</string>
+          <string>提取线点数    </string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="lineEdit"/>
+        <widget class="QLineEdit" name="extra_line_point_num"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_8">
+       <item>
+        <widget class="QLabel" name="label_7">
+         <property name="text">
+          <string>提取线长度    </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="extra_line_long"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_10">
+       <item>
+        <widget class="QLabel" name="label_9">
+         <property name="text">
+          <string>提取线间隔   </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="extra_line_num"/>
        </item>
       </layout>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QPushButton" name="startButton">
+        <widget class="QPushButton" name="quitButton">
          <property name="text">
-          <string>提取</string>
+          <string>退出</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="quitButton">
+        <widget class="QPushButton" name="startButton">
          <property name="text">
-          <string>退出</string>
+          <string>提取</string>
          </property>
         </widget>
        </item>
@@ -169,8 +197,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>573</width>
-     <height>22</height>
+     <width>480</width>
+     <height>18</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

@@ -29,7 +29,10 @@ private:
 	QString m_lidarOpenFileName;
 	QString m_sectionOpenFileName;
 	QString m_dwgSaveFileName;
-	QString m_dxfSaveFileName;
-	QString m_txtSaveFileName;
+	QString m_dxfSaveFolderName;
+	QString m_txtSaveFolderName;
 	GCS m_gcs;
+	int m_extra_line_point_num;
+	float m_extra_line_long;
+	float m_extra_line_num;
 };

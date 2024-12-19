@@ -223,6 +223,7 @@ class DXFREAD : public DRW_Interface {
 private:
 	std::vector<std::vector<std::pair<float, float>>> m_centerlines;
 public:
+	std::vector<std::vector<std::pair<float, float>>> getCenterlines();
 	virtual ~DXFREAD() override {
 
 	}
