@@ -10,12 +10,14 @@
 #include <fstream>
 #include <iomanip>
 #include <pcl/kdtree/kdtree_flann.h> 
+#include <random>
 //提取线用到的点类型
 
 using Point = std::pair<float, float>;
 struct CenterLine {
 	Point bengin_point;
 	Point end_point;
+	Point center_point;
 	float height;
 };
 //绘制dxf文件用到的点类型

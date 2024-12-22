@@ -134,6 +134,7 @@ void GCS::getHeight(float distance,int num_point)
 	for (const auto& line : m_final_extraction_line) {
 		std::vector<std::pair<float, float>> result;
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pcdSampledPointCloud(new pcl::PointCloud<pcl::PointXYZ>());
+		Eigen::Vector2f center_point(line.center_point.first, line.center_point.second);
 		Eigen::Vector2f begin_point(line.bengin_point.first, line.bengin_point.second);
 		Eigen::Vector2f end_point(line.end_point.first, line.end_point.second);
 		Eigen::Vector2f delta = end_point - begin_point;//计算线段上的方向向量
@@ -158,10 +159,22 @@ void GCS::getHeight(float distance,int num_point)
 		//提取关键点
 		std::vector<Eigen::Vector2f> key_points;
 		Eigen::Vector2f direction = end_point - begin_point;
+		// 中点到每个端点的距离
+		float alpha = 6.0f;//
 		for (int i = 0; i < num_point; ++i) {
-			float t = static_cast<float>(i) / (num_point);  // t 是从 0 到 1 的比例
-			Eigen::Vector2f point = begin_point + t * direction;
-			key_points.push_back(point);//输出的结果包含起始点
+			// 计算 t 的非均匀映射，使用指数函数控制采样密度
+			float t = static_cast<float>(i) / (num_point - 1);  // 归一化 [0, 1]
+			// 根据中心点加权计算新的采样位置
+			float weight = 1 - (16 * std::pow(t - 0.5, 4));  // 根据t距离中心的距离使用指数加权
+			Eigen::Vector2f point;
+	
+			if (i > num_point / 2) {
+				point = center_point + (1 - weight) * (end_point - center_point);  // 线性插值
+			}
+			else {
+				point = begin_point + weight * (center_point - begin_point);  // 线性插值
+			}
+			key_points.push_back(point);
 		}
 		//提高度
 		for (int i = 0; i < key_points.size(); i++) {
@@ -180,8 +193,12 @@ void GCS::getHeight(float distance,int num_point)
 			height = (height / num_closest);
 			result.emplace_back(dis_to_begin, height);
 		}
-			m_results.push_back(result);
+		std::sort(result.begin(), result.end(), [](const std::pair<float, float> a, const std::pair<float, float> b) -> bool {
+			return a.first < b.first;  // 按 height 升序排序
+			});
+		m_results.push_back(result);
 	}
+
 	std::cout << "结束提取高度" << std::endl;
 }
 
@@ -384,6 +401,7 @@ void GCS::getCenterLines(const std::vector<Point>& centerline, float targetDista
 			auto perpendicularLine = calculatePerpendicularLine(centerline[i - 1], centerline[i], interpolatedPoint, reslong / 2.0);
 			line.bengin_point = perpendicularLine.first;
 			line.end_point = perpendicularLine.second;
+			line.center_point = interpolatedPoint;
 			m_initial_extraction_line.push_back(line);
 			// 更新累计距离，减去目标距离
 			accumulatedDistance -= targetDistance;
