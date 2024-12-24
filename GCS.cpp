@@ -132,7 +132,9 @@ void GCS::getHeight(float distance,int num_point)
 
 	//提取高度
 	for (const auto& line : m_final_extraction_line) {
+		std::vector<pcl::PointXYZ> result_points;
 		std::vector<std::pair<float, float>> result;
+		//转换数据
 		pcl::PointCloud<pcl::PointXYZ>::Ptr pcdSampledPointCloud(new pcl::PointCloud<pcl::PointXYZ>());
 		Eigen::Vector2f center_point(line.center_point.first, line.center_point.second);
 		Eigen::Vector2f begin_point(line.bengin_point.first, line.bengin_point.second);
@@ -160,12 +162,11 @@ void GCS::getHeight(float distance,int num_point)
 		std::vector<Eigen::Vector2f> key_points;
 		Eigen::Vector2f direction = end_point - begin_point;
 		// 中点到每个端点的距离
-		float alpha = 6.0f;//
 		for (int i = 0; i < num_point; ++i) {
 			// 计算 t 的非均匀映射，使用指数函数控制采样密度
 			float t = static_cast<float>(i) / (num_point - 1);  // 归一化 [0, 1]
 			// 根据中心点加权计算新的采样位置
-			float weight = 1 - (16 * std::pow(t - 0.5, 4));  // 根据t距离中心的距离使用指数加权
+			float weight = 1 - (4 * std::pow(t - 0.5, 2));  // 根据t距离中心的距离使用指数加权
 			Eigen::Vector2f point;
 	
 			if (i > num_point / 2) {
@@ -179,6 +180,9 @@ void GCS::getHeight(float distance,int num_point)
 		//提高度
 		for (int i = 0; i < key_points.size(); i++) {
 			float height = 0.0;
+			pcl::PointXYZ point;
+			point.x = key_points[i].x();
+			point.y = key_points[i].y();
 			std::vector<PointDistance> distances;
 			//获取到keypoint到起始点的距离
 			float dis_to_begin = euclideanDistance(key_points[i].x(), key_points[i].y(), begin_point.x(), begin_point.y());
@@ -191,12 +195,15 @@ void GCS::getHeight(float distance,int num_point)
 				height += distances[i].point.z;
 			}
 			height = (height / num_closest);
+			point.z = height;
 			result.emplace_back(dis_to_begin, height);
+			result_points.push_back(point);
 		}
 		std::sort(result.begin(), result.end(), [](const std::pair<float, float> a, const std::pair<float, float> b) -> bool {
 			return a.first < b.first;  // 按 height 升序排序
 			});
 		m_results.push_back(result);
+		m_results_points.push_back(result_points);
 	}
 
 	std::cout << "结束提取高度" << std::endl;
@@ -348,6 +355,29 @@ void GCS::txtWrite(const char * foldersname, const std::string & survey_area, co
 	std::cout << "结束写入txt" << std::endl;
 }
 
+void GCS::txtAllWrite(const char * foldersname)
+{
+	std::string filename = std::string(foldersname) + "/whole_txt_res.txt";
+	std::ofstream file(filename);
+	//表头
+	file << std::left << std::setw(8) << "id"
+		<< std::setw(40) << "x"
+		<< std::setw(40) << "y"
+		<< std::setw(40) << "z"
+		<< std::endl;
+	file << std::string(98, '-') << std::endl;
+	for (int i = 0; i < m_results_points.size(); i++) {
+		for (int j = 0; j < m_results_points[i].size(); j++) {
+
+			file << std::left << std::setw(8) << (i + 1)
+				<< std::setw(30) << std::fixed << std::setprecision(6) << m_results_points[i][j].x
+				<< std::setw(30) << std::fixed << std::setprecision(6) << m_results_points[i][j].y
+				<< std::setw(30) << std::fixed << std::setprecision(6) << m_results_points[i][j].z << std::endl;
+		}
+	}
+	file.close();
+}
+
 pcl::PointCloud<pcl::PointXYZ>::Ptr GCS::getPcdPointCloud()
 {
 	return m_pcdPointCloud;
@@ -392,7 +422,7 @@ void GCS::getCenterLines(const std::vector<Point>& centerline, float targetDista
 				float dx = query_point.x - nearest_point.x;
 				float dy = query_point.y - nearest_point.y;
 				float distance_xy = std::sqrt(dx * dx + dy * dy);  // 忽略 z 坐标
-
+				std::cout << std::fixed << std::setprecision(0);
 				std::cout << "Point (" << interpolatedPoint.first << ", " << interpolatedPoint.second << ") "
 					<< "has nearest point (" << nearest_point.x << ", " << nearest_point.y << ", " << nearest_point.z << ") "
 					<< "with distance: " << distance_xy << std::endl;
@@ -429,6 +459,11 @@ std::pair<Point, Point> GCS::calculatePerpendicularLine(const Point & p1, const 
 	Point startPoint = { interpolatedPoint.first - perpendicular_dx * distance, interpolatedPoint.second - perpendicular_dy * distance };
 	Point endPoint = { interpolatedPoint.first + perpendicular_dx * distance, interpolatedPoint.second + perpendicular_dy * distance };
 	return { startPoint, endPoint };
+}
+
+std::vector<std::vector<pcl::PointXYZ>> GCS::getResultsPoints()
+{
+	return m_results_points;
 }
 
 

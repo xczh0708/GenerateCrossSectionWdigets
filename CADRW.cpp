@@ -166,3 +166,41 @@ void DXFREAD::addLWPolyline(const DRW_LWPolyline & data)
 	}
 	m_centerlines.push_back(centerline);
 }
+
+DXFALLWRITE::DXFALLWRITE(dxfRW &dxfW, std::vector<std::vector<pcl::PointXYZ>> results_points) : m_dxfW(dxfW), m_results_points(results_points) {
+}
+
+void DXFALLWRITE::writeEntities()
+{
+	for (int i = 0; i < m_results_points.size(); i++) {
+		//DRW_Polyline  polyline;
+		//polyline.flags = 0; // 0 表示不闭合
+		//for (int j = 0; j < m_results_points[i].size(); j++) {
+		//	DRW_Vertex vertex;
+		//	vertex.basePoint.x = m_results_points[i][j].x;  // 设置顶点的 X 坐标
+		//	vertex.basePoint.y = m_results_points[i][j].y;  // 设置顶点的 Y 坐标
+		//	vertex.basePoint.z = m_results_points[i][j].z;  // 设置顶点的 Z 坐标
+		//	polyline.addVertex(vertex);
+		//}
+		//m_dxfW.writePolyline(&polyline);
+		DRW_LWPolyline polyline;
+		polyline.flags = 0; // 0 表示不闭合
+		polyline.elevation = 0; // 多段线的 Z 坐标
+		for (int j = 0; j < m_results_points[i].size(); j++) {
+			// 添加顶点
+			DRW_Vertex2D* v1 = polyline.addVertex();
+			v1->x = m_results_points[i][j].x;
+			v1->y = m_results_points[i][j].y;
+			m_dxfW.writeLWPolyline(&polyline);
+			DRW_Text textheight;
+			textheight.basePoint.x = m_results_points[i][j].x;
+			textheight.basePoint.y = m_results_points[i][j].y+5;
+			textheight.height = 1;
+			textheight.text = std::to_string(static_cast<float>(m_results_points[i][j].z));
+			textheight.color = 1;
+			m_dxfW.writeLWPolyline(&polyline);
+			m_dxfW.writeText(&textheight);
+		}
+	}
+}
+

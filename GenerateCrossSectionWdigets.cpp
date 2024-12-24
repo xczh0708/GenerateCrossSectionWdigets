@@ -100,6 +100,7 @@ void GenerateCrossSectionWdigets::start()
 	m_gcs.getCenterLines(centerline, m_extra_line_num, m_extra_line_long);
 	m_gcs.getHeight(0.5, m_extra_line_point_num);
 	m_gcs.txtWrite(m_txtSaveFolderName.toStdString().c_str(), "测区名称", "坐标系名称", "度带数", "高程系统名称");
+	m_gcs.txtAllWrite(m_txtSaveFolderName.toStdString().c_str());
 	int num_file = 0;
 	for (const auto& result : m_gcs.getResults()) {
 		std::string filename = std::string(m_dxfSaveFolderName.toStdString().c_str()) + "/dxf_res" + std::to_string(num_file) + ".dxf";
@@ -108,5 +109,12 @@ void GenerateCrossSectionWdigets::start()
 		dxf.write(&writer, DRW::Version::AC1027, false);
 		num_file++;
 	}
+	//写入俯视图
+	std::vector<std::vector<pcl::PointXYZ>> results_points;
+	results_points = m_gcs.getResultsPoints();
+	std::string filename = std::string(m_dxfSaveFolderName.toStdString().c_str()) + "/dxf_all.dxf";
+	dxfRW dxf(filename.c_str());
+	DXFALLWRITE dxfallwrite(dxf, results_points);
+	dxf.write(&dxfallwrite, DRW::Version::AC1027, false);
 	std::cout << "结束" << std::endl;
 }

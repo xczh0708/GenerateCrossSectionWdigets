@@ -36,15 +36,18 @@ public:
 	//将点云转换到断面坐标系上
 	pcl::PointCloud<pcl::PointXYZ>::Ptr projrctPoint(pcl::PointCloud<pcl::PointXYZ>::Ptr samplecloud, const Eigen::Vector2f & begin_point, const Eigen::Vector2f & end_point);
 	void txtWrite(const char* foldername, const std::string& survey_area, const std::string& coordinate_system, const std::string& zone_band, const std::string& elevation_system);
+	void txtAllWrite(const char * foldersname);
 	pcl::PointCloud<pcl::PointXYZ>::Ptr getPcdPointCloud();
 	//pcl::PointCloud<pcl::PointXYZ>::Ptr getPcdSampledPointCloud();
 	std::vector<std::vector<std::pair<float, float>>> getResults();
 	void getCenterLines(const std::vector<Point>& centerline, float targetDistance, float reslong);
 	std::pair<Point, Point> calculatePerpendicularLine(const Point& p1, const Point& p2, const Point& interpolatedPoint, float distance = 100.0f);
+	std::vector<std::vector<pcl::PointXYZ>> getResultsPoints();
 private:
 	pcl::PointCloud<pcl::PointXYZ>::Ptr m_pcdPointCloud;
 	//pcl::PointCloud<pcl::PointXYZ>::Ptr m_pcdSampledPointCloud;
-	std::vector<std::vector<std::pair<float, float>>> m_results; //储存多条提取线的结果
+	std::vector<std::vector<std::pair<float, float>>> m_results; //储存多条提取线的结果 
+	std::vector<std::vector<pcl::PointXYZ>> m_results_points;
 	std::vector<CenterLine> m_initial_extraction_line;
 	std::vector<CenterLine> m_final_extraction_line;
 };
